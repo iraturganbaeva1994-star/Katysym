@@ -247,6 +247,8 @@ function setLang(lang) {
   currentLang = (lang === "ru") ? "ru" : "kk";
   document.body.dataset.lang = currentLang;
   localStorage.setItem("lang", currentLang);
+  applyI18n();
+}
 
 /* ================== SCHOOL CALENDAR / HOLIDAYS (ONE COPY ONLY) ================== */
 
@@ -709,16 +711,16 @@ function sumTotals(report){
 }
 
 /* ================== TOP ================== */
-function buildTop(report, code, limit=10) {
-  return (report.students||[])
-    .map(s=>({
-      name:s.full_name,
-      cls:`${s.grade}${s.class_letter}`,
-      count:Number(report.totals?.[String(s.id)]?.[code]||0)
+function buildTop(report, code, limit = 10) {
+  return (report.students || [])
+    .map((s) => ({
+      name: s.full_name,
+      cls: `${s.grade}${s.class_letter}`,
+      count: Number(report.totals?.[String(s.id)]?.[code] || 0),
     }))
-    .filter(x=>x.count>3) // 4+ рет (3тен жогары)
-    .sort((a,b)=>b.count-a.count)
-    .slice(0,limit);
+    .filter((x) => x.count >= 3) // 3+
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
 }
 
 function fillTable(tableId, rows){
@@ -1086,8 +1088,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (type === "quarter") document.getElementById("quarterControl") && (document.getElementById("quarterControl").style.display = "flex");
   if (type === "year") document.getElementById("yearControl") && (document.getElementById("yearControl").style.display = "flex");
 
-  if (type === "custom" || type === "week") {
-    document.getElementById("customControl") && (document.getElementById("customControl").style.display = "flex");
+  if (type === "day" || type === "week" || type === "custom") {
+    const customControl = document.getElementById("customControl");
+    if (customControl) customControl.style.display = "flex";
+  }
+
+  const customControl = document.getElementById("customControl");
+  const toLabel = customControl?.querySelector('[data-i18n="toLabel"]');
+  const toInput = customControl?.querySelector("#customEnd");
+  if (type === "day") {
+    if (toLabel) toLabel.style.display = "none";
+    if (toInput) {
+      toInput.style.display = "none";
+      toInput.value = document.getElementById("customStart")?.value || toInput.value;
+    }
+  } else {
+    if (toLabel) toLabel.style.display = "";
+    if (toInput) toInput.style.display = "";
   }
 });
 
@@ -1096,6 +1113,13 @@ document.getElementById("saveAttendanceBtn")?.addEventListener("click", saveAtte
 document.getElementById("updateStatsBtn")?.addEventListener("click", updateStats);
 document.getElementById("exportCsvBtn")?.addEventListener("click", exportCsv);
 document.getElementById("searchInput")?.addEventListener("input", renderAttendanceTable);
+document.getElementById("customStart")?.addEventListener("change", () => {
+  const type = document.getElementById("periodType")?.value;
+  if (type !== "day") return;
+  const start = document.getElementById("customStart")?.value;
+  const end = document.getElementById("customEnd");
+  if (start && end) end.value = start;
+});
 
 // ✅ Бет ашылғанда period control-дар бірден дұрыс көрінсін
 document.getElementById("periodType")?.dispatchEvent(new Event("change"));
