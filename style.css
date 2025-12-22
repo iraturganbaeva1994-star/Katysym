@@ -1,0 +1,758 @@
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --primary:#2563eb;
+  --shadow: 0 14px 40px rgba(17,24,39,.10);
+  --r:18px;
+}
+.holidayTag{
+  display:inline-block;
+  padding:4px 8px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin:2px 4px 2px 0;
+}
+.holidayTag button{
+  margin-left:6px;
+  cursor:pointer;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.topbar{
+  position:sticky; top:0; z-index:10;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 18px;
+  gap:12px;
+}
+
+.brand{
+  display:flex; align-items:center; gap:12px;
+}
+.logo-img{
+  width:44px; height:44px;
+  object-fit:contain;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid var(--line);
+  padding:4px;
+}
+.brand-text .school-name{
+  font-weight:700;
+  line-height:1.2;
+  font-size:14px;
+}
+.lang-toggle{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:6px 10px;
+  cursor:pointer;
+}
+.pill{font-weight:700}
+
+.app{padding:22px}
+
+.view{display:none}
+.view.active{display:block}
+
+.home-card{
+  max-width: 980px;
+  margin: 24px auto;
+  background: var(--card);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.banner{
+  height: 280px;
+  background: url("img/banner.jpg") center/cover no-repeat;
+  position:relative;
+}
+.banner-overlay{
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, rgba(37,99,235,.88), rgba(139,92,246,.78));
+  padding:42px 44px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  color:#fff;
+}
+.banner-title,
+.banner-text{
+  background: transparent;
+  display: inline-block;
+  padding: 0;
+  border-radius: 0;
+  text-shadow: 0 6px 20px rgba(0,0,0,.35);
+}
+
+.report-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:8px;
+}
+
+
+.home-actions{
+  display:flex;
+  gap:12px;
+  padding:18px;
+}
+
+.install-card {
+  margin: 20px auto;
+  max-width: 980px;
+  background: #f0f4ff;
+  border: 1px solid #d1ddf7;
+}
+
+.install-instructions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.install-item {
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.install-item h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.install-steps {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+  white-space: pre-line;
+}
+
+.btn{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:14px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+.btn.primary{
+  background: var(--primary);
+  color:#fff;
+  border-color: transparent;
+}
+.btn.ghost{
+  background:#fff;
+}
+.btn.link{
+  border:none;
+  background:transparent;
+  padding:6px 0;
+  color: var(--primary);
+  font-weight:800;
+}
+.btn.link.light{color:#fff}
+
+.panel{
+  max-width: 1100px;
+  margin: 14px auto 0;
+  background:#fff;
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding:16px;
+}
+
+.view-head{
+  max-width:1100px;
+  margin: 6px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.view-title{
+  margin:0;
+  font-size:26px;
+  font-weight:900;
+}
+.view-title.light{color:#fff}
+
+.controls{
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.field{display:flex; flex-direction:column; gap:6px; min-width:170px}
+.field.grow{flex:1}
+.label{color: var(--muted); font-weight:700; font-size:12px}
+input, select{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:14px;
+  outline:none;
+  background:#fff;
+}
+.save-status{
+  margin-top:10px;
+  min-height:20px;
+  color: var(--muted);
+  font-weight:700;
+}
+.table-wrap{margin-top:12px; overflow:auto}
+.table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.table th, .table td{
+  padding:12px 12px;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+.table thead th{
+  background:#f2f4f8;
+  font-weight:900;
+  font-size:13px;
+}
+.table tbody tr:last-child td{border-bottom:none}
+
+.status-cell{display:flex; flex-direction:column; gap:8px}
+.status-text{font-weight:900}
+.status-select{width:100%}
+
+.present{background: rgba(34,197,94,.10)}
+.sick{background: rgba(249,115,22,.10)}
+.late{background: rgba(234,179,8,.12)}
+.excused{background: rgba(59,130,246,.10)}
+.absent{background: rgba(239,68,68,.10)}
+
+.hint{
+  margin-top:12px;
+  color: var(--muted);
+  font-weight:700;
+  font-size:13px;
+}
+.hint.light{color: rgba(255,255,255,.92)}
+
+.reports-bg{background:#f4f6ff;}
+.reports-head{
+  padding: 20px 22px;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 12px;
+}
+.reports-head .view-title {
+  color: white;
+  margin: 0;
+  font-size: 22px;
+}
+.reports-head .btn.link.light {
+  color: white;
+}
+.reports-shell{padding: 10px 22px 22px}
+.reports-card{
+  background:#fff;
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding:16px;
+}
+.report-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+}
+.subcontrols{
+  display:flex;
+  gap:12px;
+  align-items:flex-end;
+}
+.report-actions{display:flex; gap:12px; margin-left:auto}
+
+.kpis{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(6, minmax(140px, 1fr));
+  gap:10px;
+}
+.kpi{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.kpi-label{color: var(--muted); font-weight:800; font-size:12px}
+.kpi-val{font-size:26px; font-weight:1000; margin-top:6px}
+
+.tables-grid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+.mini-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.mini-title{
+  margin:0 0 10px 0;
+  font-weight:1000;
+}
+.table.mini th, .table.mini td{padding:10px}
+
+@media (max-width:640px){
+  .banner{ height: 220px; }
+  .banner-overlay{ padding: 18px; }
+  .banner-title{ font-size: 28px; }
+  .banner-text{ font-size: 14px; }
+}
+
+.reportBox{border:1px solid #ddd;padding:15px;border-radius:10px}
+.holidayBox{margin-top:15px;padding:10px;border:1px dashed #aaa}
+.holidayTag{display:inline-block;margin:4px;padding:4px 8px;border:1px solid #ccc;border-radius:12px}
+.holidayTag button{margin-left:6px;cursor:pointer}
+.reportButtons button{margin-right:10px;margin-top:10px}
+.schoolDaysInfo{margin-top:8px}
+/* REPORTS header – көк градиент */
+#viewReports .reports-head{
+  background: linear-gradient(90deg, #2563eb, #7c3aed) !important;
+  color:#fff !important;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+#viewReports .reports-head .view-title,
+#viewReports .reports-head .btn.link.light{
+  color:#fff !important;
+}
+
+/* Таблица тақырыбы дөңгелек */
+#viewReports table.table thead th{
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#viewReports table.table{
+  border-radius: 14px;
+  overflow: hidden; /* дөңгелек бұрыш көріну үшін */
+}
+/* ===== Reports layout improvements ===== */
+.report-controls-top{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap:12px;
+  align-items:end;
+}
+.report-controls-top .subcontrols{ display:contents; } /* ішіндегі field-тер grid-ке бағынады */
+.report-controls-top .report-actions{
+  justify-self:end;
+  grid-column: 3 / 4;
+  display:flex;
+  gap:12px;
+}
+
+.holidayBox-top{
+  margin-top:12px;
+  border:1px dashed #cbd5e1;
+  border-radius:14px;
+  padding:12px;
+  background:#f8fafc;
+}
+.holidayRow{
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  gap:12px;
+  align-items:center;
+}
+.holidayBtns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.holidayDays{ justify-self:end; font-weight:800; }
+.holidayList{ margin-top:10px; }
+
+.dayIssuesBox{ margin-top:14px; }
+.dayGrid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap:12px;
+}
+@media (max-width: 980px){
+  .dayGrid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px){
+  .report-controls-top{ grid-template-columns: 1fr; }
+  .report-controls-top .report-actions{ grid-column:auto; justify-self:start; }
+  .holidayRow{ grid-template-columns: 1fr; }
+  .holidayDays{ justify-self:start; }
+  .dayGrid{ grid-template-columns: 1fr; }
+}
+
+.summary-circles{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap:12px;
+}
+.sum-item{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+}
+.sum-item .circle{
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:1000;
+  font-size:18px;
+  border:2px solid var(--line);
+  background:#f8fafc;
+}
+.sum-item .label{ font-weight:900; }
+
+/* Көрсету батырмасы – көк */
+#updateStatsBtn{
+  background:#2563eb !important;
+  color:#fff !important;
+  border:none !important;
+}
+#updateStatsBtn:hover{ filter: brightness(0.95); }
+
+/* CSV жүктеу – көк */
+#exportCsvBtn{
+  background:#2563eb !important;
+  color:#fff !important;
+  border:none !important;
+}
+#exportCsvBtn:hover{ filter: brightness(0.95); }
+
+
+
+
+
+
+
+.banner-title,
+.banner-text{
+  /* ✅ көк жолақты алып тастау */
+  background: transparent;
+  display: inline-block;
+  padding: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  text-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+
+.banner-title{
+  font-size: 34px;
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+
+.banner-text{
+  font-size: 15px;
+  font-weight: 700;
+  max-width: 720px;
+  line-height: 1.4;
+}
+
+/* ===== КҮНДІК ПРОПУСКТАР (GRID) ===== */
+.day-issues{
+  margin-top: 20px;
+}
+
+.day-issues h3{
+  margin-bottom: 14px;
+}
+
+.day-issues-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.day-card{
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: #fff;
+}
+
+.day-card h4{
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+/* Телефонға */
+@media (max-width: 900px){
+  .day-issues-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== ҚОРЫТЫНДЫ ШЕҢБЕРЛЕР ===== */
+.summary-circles{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.sum-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.sum-item .circle{
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  border: 3px solid;
+}
+
+/* Түстер */
+.sum-item.total .circle{
+  border-color: #6366f1;
+  color: #6366f1;
+}
+.sum-item.present .circle{
+  border-color: #22c55e;
+  color: #22c55e;
+}
+.sum-item.late .circle{
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+.sum-item.sick .circle{
+  border-color: #fb923c;
+  color: #fb923c;
+}
+.sum-item.excused .circle{
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+.sum-item.unexcused .circle{
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.sum-item .label{
+  font-size: 14px;
+  text-align: center;
+  opacity: .9;
+}
+
+/* Фильтрлер блогын жинақы ету */
+.report-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+}
+
+/* Holiday box жоғарыда әдемі көрінсін */
+.holidayBox{
+  margin-top:14px;
+  padding:12px;
+  border:1px dashed #c7c7c7;
+  border-radius:14px;
+  background:#fff;
+}
+
+/* ==== Day issues grid (3 баған) ==== */
+.day-issues-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+@media (max-width: 900px){
+  .day-issues-grid{ grid-template-columns:1fr; }
+}
+
+/* ==== Дөңгелек summary ==== */
+.summary-circles{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap:16px;
+  margin:18px 0 6px;
+}
+.sum-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.sum-item .circle{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;
+  background:#fff;
+  border:3px solid;
+  box-shadow: 0 10px 24px rgba(17,24,39,.10);
+}
+.sum-item .label{ font-weight:800; font-size:14px; opacity:.9; text-align:center; }
+
+/* Түстер */
+.sum-item.total .circle{ border-color:#6366f1; color:#6366f1; }
+.sum-item.present .circle{ border-color:#22c55e; color:#22c55e; }
+.sum-item.late .circle{ border-color:#f59e0b; color:#f59e0b; }
+.sum-item.sick .circle{ border-color:#fb923c; color:#fb923c; }
+.sum-item.excused .circle{ border-color:#3b82f6; color:#3b82f6; }
+.sum-item.unexcused .circle{ border-color:#ef4444; color:#ef4444; }
+
+.reports-bg {
+  background: #e3f2fd;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 8px 12px;
+  }
+  .brand-text {
+    font-size: 14px;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .field {
+    width: 100%;
+  }
+  .kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tables-grid {
+    grid-template-columns: 1fr;
+  }
+  .dayGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Mobile button optimization */
+  #updateStatsBtn, #exportCsvBtn {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .report-actions {
+    margin-left: 0;
+    flex: 1;
+  }
+  
+  .install-instructions {
+    grid-template-columns: 1fr;
+  }
+  
+  .home-actions {
+    flex-direction: column;
+  }
+  
+  .home-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .table {
+    font-size: 12px;
+  }
+  
+  .table th, .table td {
+    padding: 8px 6px;
+  }
+  
+  .btn {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 16px;
+  background:#fff;
+  border-bottom:1px solid #e6e6e6;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-logo{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #3b82f6;
+  background:#fff;
+}
+
+.brand-title{
+  font-size:14px;
+  font-weight:700;
+  line-height:1.2;
+}
+
+.lang-btn{
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid #d1d5db;
+  background:#fff;
+  font-size:12px;
+  cursor:pointer;
+}
+.lang-btn:hover{ background:#f3f4f6; }
+
+
+
+
+
