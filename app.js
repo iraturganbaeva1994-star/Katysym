@@ -633,34 +633,32 @@ function getRangeFromPeriod() {
   const type = document.getElementById("periodType")?.value;
   const toISO = d => d.toISOString().slice(0,10);
   const d0 = s => new Date(s + "T00:00:00");
-
-  // ✅ DAY: customStart арқылы 1 күн
+  
+  if (type === "custom") {
+  const start = document.getElementById("customStart")?.value;
+  const end   = document.getElementById("customEnd")?.value || start;
+  if (!start) return null;
+  return (start <= end) ? { from: start, to: end } : { from: end, to: start };
+}
+ // ✅ DAY: customStart арқылы 1 күн
   if (type === "day") {
     const d = document.getElementById("customStart")?.value;
     if (!d) return null;
     return { from: d, to: d };
   }
 
-  // ✅ WEEK: таңдалған күннен бастап 7 күн (from..to = 7 күн)
-if (type === "week") {
-  const startISO = document.getElementById("customStart")?.value;
-  if (!startISO) return null;
+  // ✅ WEEK: customStart/customEnd арқылы
+  if (type === "week") {
+    const start = document.getElementById("customStart")?.value;
+    const end = document.getElementById("customEnd")?.value || start;
+    if (!start) return null;
+    if (!end) return { from: start, to: start };
+    return (start <= end) ? { from: start, to: end } : { from: end, to: start };
+  }
 
-  const start = new Date(startISO + "T00:00:00");
-  const end = new Date(start);
-  end.setDate(end.getDate() + 6); // 7 күн = start + 6
-
-  const from = startISO;
-  const to = end.toISOString().slice(0, 10);
-
-  // UI-дағы "Аяқталу күні" де дұрыс тұрсын
-  const endInput = document.getElementById("customEnd");
-  if (endInput) endInput.value = to;
-
-  return { from, to };
-}
 
   // ✅ MONTH
+
   if (type === "month") {
     const v = document.getElementById("monthInput")?.value;
     if (!v) return null;
@@ -830,7 +828,7 @@ function eachDateISO(fromISO, toISO) {
   const start = new Date(fromISO + "T00:00:00");
   const end = new Date(toISO + "T00:00:00");
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    res.push(d.toISOString().slice(0, 10));
+    res.push(fmtISO(d));
   }
   return res;
 }
@@ -845,8 +843,27 @@ function buildIssuesForRange(report, range) {
   const sick = [];
   const exc = [];
   const unex = [];
+  
+const dates = eachDateISO(
+  range.from,
+  addDaysISO(range.to, 1) 
+);
+const dailyKeys = Object.keys(daily); 
 
-  const dates = eachDateISO(range.from, range.to);
+
+  if (!dailyKeys.length) {
+    const totals = report.totals || {};
+    (report.students || []).forEach((s) => {
+      const t = totals[String(s.id)] || {};
+      const cls = `${s.grade}${s.class_letter}`;
+      if (Number(t.keshikti || 0) > 0) late.push({ name: s.full_name, cls });
+      if (Number(t.auyrdy || 0) > 0) sick.push({ name: s.full_name, cls });
+      if (Number(t.sebep || 0) > 0) exc.push({ name: s.full_name, cls });
+      if (Number(t.sebsez || 0) > 0) unex.push({ name: s.full_name, cls });
+    });
+    return { late, sick, exc, unex };
+  }
+
 
   // бір адам мерзім ішінде бірнеше рет кездесуі мүмкін → қайталамас үшін Set
   const seen = {
@@ -907,10 +924,19 @@ function renderDayIssuesForRange(report, range) {
 }
 
 // ===== DATE HELPERS =====
-function addDaysISO(iso, days) {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+
+function fmtISO(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function addDaysISO(isoStr, days) {
+  const [y,m,d] = isoStr.split("-").map(Number);
+  const dt = new Date(y, m-1, d);   // local date
+  dt.setDate(dt.getDate() + days);
+  return fmtISO(dt);
 }
 
 async function updateStats() {
@@ -932,15 +958,16 @@ async function updateStats() {
   try {
     
     // ✅ API үшін диапазон: to = келесі күн (end-exclusive болса да дұрыс)
-    const apiFrom = range.from;
-    const apiTo = addDaysISO(range.to, 1);
+   const apiFrom = range.from;
+const apiTo = addDaysISO(range.to, 1); // ✅ әрқашан to+1
 
-    const report = await apiGet("report", {
-      from: apiFrom,
-      to: apiTo,
-      grade,
-      class_letter,
-    });
+const report = await apiGet("report", {
+  from: apiFrom,
+  to: apiTo,
+  grade,
+  class_letter,
+});
+
 
     // ✅ Күндік блок (кешіккен/ауырған/себепті/себепсіз)
     renderDayIssuesForRange(report, range);
@@ -1139,6 +1166,7 @@ applyI18n();
   }
 
   updateSchoolDaysUI();
+    updateStats();
 });
 
   // Бүгінгі күнді қою
@@ -1190,7 +1218,7 @@ document.getElementById("saveAttendanceBtn")?.addEventListener("click", saveAtte
 document.getElementById("updateStatsBtn")?.addEventListener("click", updateStats);
 document.getElementById("exportCsvBtn")?.addEventListener("click", exportCsv);
 document.getElementById("searchInput")?.addEventListener("input", renderAttendanceTable);
-  
+
 // ✅ Бет ашылғанда period control-дар бірден дұрыс көрінсін
 document.getElementById("periodType")?.dispatchEvent(new Event("change"));
   
@@ -1219,6 +1247,16 @@ try {
   alert("API error: " + e.message);
 }
 }); // ✅ end DOMContentLoaded
+
+
+
+
+
+
+
+
+
+
 
 
 
