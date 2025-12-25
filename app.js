@@ -253,7 +253,12 @@ const OFFICIAL_BREAKS_2025_2026 = [
   // { from:"2026-02-09", to:"2026-02-15" },
 ];
 function d0(iso) { return new Date(iso + "T00:00:00"); }
-function iso(d) { return d.toISOString().slice(0, 10); }
+function iso(d) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 function betweenInclusive(dateISO, fromISO, toISO) {
   const t = d0(dateISO).getTime();
@@ -556,10 +561,12 @@ async function saveAttendance() {
 
 
 /* ================== ПЕРИОД ================== */
+
 function getRangeFromPeriod() {
   const type = document.getElementById("periodType")?.value;
-   const toISO = d => fmtISO (d );
+  const toISO = d => iso(d);
   const d0 = s => new Date(s + "T00:00:00");
+
 
   // ✅ DAY: customStart арқылы 1 күн
   if (type === "day") {
@@ -571,6 +578,7 @@ function getRangeFromPeriod() {
   // ✅ WEEK: соңғы 5 оқу күні (дүйсенбі–жұма), 7 күн емес
   if (type === "week") {
     const end = new Date();
+    
     // бүгіннен артқа 7 күн қарап, тек оқу күндерін жинаймыз
     const days = [];
     for (let i = 0; i < 14 && days.length < 5; i++) {
@@ -589,7 +597,7 @@ function getRangeFromPeriod() {
     const v = document.getElementById("monthInput")?.value;
     if (!v) return null;
     const [y,m] = v.split("-");
-    const last = new Date(Number(y), Number(m), 0); // соңғы күн
+ const last = new Date(Number(y), Number(m), 0); // соңғы күн
     return { from:`${y}-${m}-01`, to: toISO(last) };
   }
 
@@ -624,10 +632,24 @@ function getRangeFromPeriod() {
 
 function sumTotals(report){
   const totals = { total:0, katysty:0, keshikti:0, sebep:0, sebsez:0, auyrdy:0 };
-  Object.values(report.totals || {}).forEach(t => {
-    ["katysty","keshikti","sebep","sebsez","auyrdy"].forEach(k => {
-      totals[k] += Number(t[k] || 0);
-      totals.total += Number(t[k] || 0);
+  const totalsByStudent = report.totals || {};
+  if (Object.keys(totalsByStudent).length) {
+    Object.values(totalsByStudent).forEach(t => {
+      ["katysty","keshikti","sebep","sebsez","auyrdy"].forEach(k => {
+        totals[k] += Number(t[k] || 0);
+        totals.total += Number(t[k] || 0);
+      });
+    });
+    return totals;
+  }
+
+  const daily = report.daily || {};
+  Object.values(daily).forEach(byStudent => {
+    Object.values(byStudent || {}).forEach(st => {
+      const code = st?.status_code || "katysty";
+      if (totals[code] == null) return;
+      totals[code] += 1;
+      totals.total += 1;
     });
   });
   return totals;
@@ -709,10 +731,12 @@ function eachDateISO(fromISO, toISO) {
   const start = new Date(fromISO + "T00:00:00");
   const end = new Date(toISO + "T00:00:00");
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    res.push(d.toISOString().slice(0, 10));
+    res.push(iso(d));
   }
   return res;
 }
+
+
 
 // 4) report.daily ішінен таңдалған мерзім бойынша (1 күн/апта/ай/жыл/барлығы)
 // кешіккен/ауырған/себепті/себепсіз тізімдерді жинау
@@ -825,18 +849,6 @@ async function updateStats() {
     alert((currentLang === "ru" ? "Ошибка отчёта: " : "Есеп қатесі: ") + e.message);
   }
 }
-
-
- // ===== DATE HELPERS =====
-function iso(d){ return d.toISOString().slice(0,10); }
-function d0(s){ return new Date(s + "T00:00:00"); }
-
-function betweenInclusive(dateISO, fromISO, toISO){
-  const t = d0(dateISO).getTime();
-  return t >= d0(fromISO).getTime() && t <= d0(toISO).getTime();
-}
-
-
 
 function exportCsv() {
   const range = getRangeFromPeriod();
@@ -1003,7 +1015,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (type === "week") {
     const d = new Date(startISO + "T00:00:00");
     d.setDate(d.getDate() + 6);
-    endInput.value = d.toISOString().slice(0,10);
+    endInput.value = iso(d);
   }
 
   updateSchoolDaysUI();
@@ -1011,17 +1023,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
   
   // Бүгінгі күнді қою
- const today = new Date ();
- 
-  const iso = typeof fmtISO === "function"
-    ? fmtISO (сегодня)
-    : сегодня. toISOString (). slice ( 0 , 10 );
+const today = new Date();
+  const todayIso = iso(today);
 
-  document.getElementById("attendanceDate") && (document.getElementById("attendanceDate").value = iso);
- document.getElementById("customStart") && (document.getElementById("customStart").value = iso);
-  document.getElementById("customEnd") && (document.getElementById("customEnd").value = iso);
+  document.getElementById("attendanceDate") && (document.getElementById("attendanceDate").value = todayIso);
+  document.getElementById("customStart") && (document.getElementById("customStart").value = todayIso);
+  document.getElementById("customEnd") && (document.getElementById("customEnd").value = todayIso);
   document.getElementById("yearInput") && (document.getElementById("yearInput").value = today.getFullYear());
   document.getElementById("quarterYearInput") && (document.getElementById("quarterYearInput").value = today.getFullYear());
+
 
   // Период өзгерсе — контролдарды көрсету/жасыру
  document.getElementById("periodType")?.addEventListener("change", () => {
@@ -1098,6 +1108,9 @@ try {
   alert("API error: " + e.message);
 }
 }); // ✅ end DOMContentLoaded
+
+
+
 
 
 
